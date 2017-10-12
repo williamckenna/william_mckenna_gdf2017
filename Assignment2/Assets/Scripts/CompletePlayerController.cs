@@ -8,11 +8,15 @@ public class CompletePlayerController : MonoBehaviour {
 
 	public float speed;				//Floating point variable to store the player's movement speed.
 	public Text countText;			//Store a reference to the UI Text component which will display the number of pickups collected.
+	public Text Score;
 	public Text Counter;
 	public Text winText;			//Store a reference to the UI Text component which will display the 'You win' message.
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
-	private int count;				//Integer to store the number of pickups collected so far.
+	private int count;
+	private int count2;				//Integer to store the number of pickups collected so far.
+	private int scorevalue;
+
 
 	// Use this for initialization
 	void Start()
@@ -22,6 +26,10 @@ public class CompletePlayerController : MonoBehaviour {
 
 		//Initialize count to zero.
 		count = 0;
+
+		count2 = 0;
+
+		scorevalue = 0;
 
 		//Call our SetCountText function which will update the text with the current value for count.
 		SetCountText ();
@@ -47,14 +55,30 @@ public class CompletePlayerController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) 
 	{
 		//Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-		if (other.gameObject.CompareTag ("PickUp")) 
+		if (other.gameObject.CompareTag ("PickUp")) {
+
+			//... then set the other object we just collided with to inactive.
+			other.gameObject.SetActive(false);
+
+			//Add one to the current value of our count variable.
+			count = count + 1;
+
+			scorevalue = scorevalue + 1;
+
+			//Update the currently displayed count by calling the SetCountText function.
+			SetCountText ();
+
+
+		}
 		if (other.gameObject.CompareTag ("PickUp2"))	
 		{
 			//... then set the other object we just collided with to inactive.
 			other.gameObject.SetActive(false);
 			
 			//Add one to the current value of our count variable.
-			count = count + 1;
+			count2 = count2 + 1;
+
+			scorevalue = scorevalue + 5;
 			
 			//Update the currently displayed count by calling the SetCountText function.
 			SetCountText ();
@@ -69,10 +93,14 @@ public class CompletePlayerController : MonoBehaviour {
 	void SetCountText()
 	{
 		//Set the text property of our our countText object to "Count: " followed by the number stored in our count variable.
-		countText.text = "Count: " + count.ToString ();
+		countText.text = "Allie: " + count.ToString ();
+
+		Counter.text = "Enemy: " + count2.ToString ();
+
+		Score.text = "Score: " + scorevalue.ToString ();
 
 		//Check if we've collected all 12 pickups. If we have...
-		if (count >= 12)
+		if ((count2 >= 4) & (count >= 8))
 			//... then set the text property of our winText object to "You win!"
 			winText.text = "You win!";
 	}
